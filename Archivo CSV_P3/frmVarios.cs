@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,7 @@ namespace Archivo_CSV_P3
                 {
                     //creamos una excepcion para si no se introdujo 
                     throw new Exception("Estado no encotrado");
+                   
                 }
                 if (clave == estados[i, 0])
                 {
@@ -51,7 +53,7 @@ namespace Archivo_CSV_P3
 
             if (curp.Length < 18 || curp.Length > 18)
             {
-               //excepcion para el tamaño
+                //excepcion para el tamaño
                 throw new Exception("El tamaño de la curp no es correcto");
             }
             string fechas = curp.Substring(4, 6);
@@ -77,16 +79,17 @@ namespace Archivo_CSV_P3
             int dias = DateTime.Now.Day-int.Parse(fecha.Substring(4,2));
             edads = DateTime.Now.Year - edads;
 
+            if (dias < 0)
+            {
+                meses--;
+                dias += DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month - 1);
+            }
             if (meses < 0)
             {
                 edads--;
                 meses += 12;
             }
-            if(dias < 0)
-            {
-                meses--;
-                dias += DateTime.DaysInMonth(DateTime.Now.Year,DateTime.Now.Month-1);
-            }
+    
             edad = edads + " años, " + meses + " meses, " + dias + (dias<2 ?" dia " : " dias");
             return edad;
         }
@@ -106,18 +109,18 @@ namespace Archivo_CSV_P3
             int edad = fechaCal.Year - fechaNac.Year;
             int meses = fechaCal.Month - fechaNac.Month;
             int dias = fechaCal.Day - fechaNac.Day;
-
-
-            if (fechaCal.Month < fechaNac.Month)
-            {
-                edad--;
-                meses += 12;
-            }
-            if (fechaCal.Day < fechaNac.Day)
+            if (dias < 0)
             {
                 meses--;
                 dias += DateTime.DaysInMonth(fechaCal.Year, fechaCal.Month - 1);
             }
+
+            if (meses<0)
+            {
+                edad--;
+                meses += 12;
+            }
+         
             MessageBox.Show("Años: " + edad + " Meses: " + meses + " Dias: " + dias, "Resultado", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
